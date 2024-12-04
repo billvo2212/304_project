@@ -1,0 +1,26 @@
+<div style="margin: 0 auto; max-width: 400px; text-align: center; font-family: Arial, Helvetica, sans-serif; padding: 20px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+    <h3 style="color: #4CAF50;">Please Login to System</h3>
+
+    {{#if loginMessage}}
+        <p style="color: red; font-weight: bold;">{{loginMessage}}</p>
+    {{/if}}
+
+    <form name="MyForm" method="post" action="/validateLogin" style="margin-top: 20px;">
+        <div style="margin-bottom: 15px; text-align: left;">
+            <label for="username" style="font-weight: bold; font-size: 14px;">Username:</label>
+            <input type="text" id="username" name="username" maxlength="10" 
+                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" required>
+        </div>
+        <div style="margin-bottom: 20px; text-align: left;">
+            <label for="password" style="font-weight: bold; font-size: 14px;">Password:</label>
+            <input type="password" id="password" name="password" maxlength="10" 
+                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" required>
+        </div>
+        <input type="submit" class="submit" name="Submit2" value="Log In" 
+            style="width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+    </form>
+
+    <div style="margin-top: 20px;">
+        <a href="/" style="text-decoration: none; color: #4CAF50; font-size: 14px;">Back to Home</a>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+<div style="font-family: Arial, Helvetica, sans-serif; text-align: center; max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+    <h1 style="color: #4CAF50; font-size: 36px;">Welcome to Bill's and Naman's Grocery Store</h1>
+    
+    <div style="margin: 30px 0;">
+        <a href="/login" style="text-decoration: none; display: block; font-size: 20px; margin: 10px 0; padding: 10px 20px; color: white; background-color: #4CAF50; border-radius: 5px; width: 200px; margin-left: auto; margin-right: auto;">Login</a>
+        <a href="/listprod" style="text-decoration: none; display: block; font-size: 20px; margin: 10px 0; padding: 10px 20px; color: white; background-color: #4CAF50; border-radius: 5px; width: 200px; margin-left: auto; margin-right: auto;">Begin Shopping</a>
+        <a href="/listorder" style="text-decoration: none; display: block; font-size: 20px; margin: 10px 0; padding: 10px 20px; color: white; background-color: #4CAF50; border-radius: 5px; width: 200px; margin-left: auto; margin-right: auto;">List All Orders</a>
+        <a href="/customer" style="text-decoration: none; display: block; font-size: 20px; margin: 10px 0; padding: 10px 20px; color: white; background-color: #4CAF50; border-radius: 5px; width: 200px; margin-left: auto; margin-right: auto;">Customer Info</a>
+        <a href="/admin" style="text-decoration: none; display: block; font-size: 20px; margin: 10px 0; padding: 10px 20px; color: white; background-color: #4CAF50; border-radius: 5px; width: 200px; margin-left: auto; margin-right: auto;">Administrators</a>
+        <a href="/logout" style="text-decoration: none; display: block; font-size: 20px; margin: 10px 0; padding: 10px 20px; color: white; background-color: #f44336; border-radius: 5px; width: 200px; margin-left: auto; margin-right: auto;">Log Out</a>
+    </div>
+
+    {{#if username}}
+        <h3 style="color: #333; font-size: 18px;">Signed in as: <span style="font-weight: bold;">{{username}}</span></h3>
+    {{/if}}
+</div>
