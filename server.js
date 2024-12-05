@@ -23,21 +23,27 @@ const app = express();
 
 // This DB Config is accessible globally
 dbConfig = {    
-  server: 'cosc304-sqlserver',
+  server: 'cosc304_sqlserver',
   database: 'orders',
   authentication: {
       type: 'default',
       options: {
-          userName: "sa", 
-          password: "Test123456789"
+          userName: 'sa', 
+          password: '304#sa#pw'
       }
   },   
   options: {      
     encrypt: false,      
     enableArithAbort:false,
-    trustServerCertificate: true, 
+    trustServerCertificate: true,
+    database: 'orders'
   }
 }
+
+if (process.env.MSSQL_URL) {
+  dbConfig = process.env.MSSQL_URL;
+}
+
 app.use(express.static('public'));
 
 // Setting up the session.
