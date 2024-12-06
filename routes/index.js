@@ -7,7 +7,7 @@ router.get('/', function (req, res) {
     
     // TODO: Display user name that is logged in (or nothing if not logged in)	
     res.render('index', {
-        title: "Bill & Naman Grocery Main Page",
+        title: "SNEAKER-HEAD",
         username: req.session.authenticatedUser
         // HINT: Look at the /views/index.handlebars file
         // to get an idea of how the index page is being rendered

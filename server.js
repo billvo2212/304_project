@@ -23,7 +23,7 @@ const app = express();
 
 // This DB Config is accessible globally
 dbConfig = {    
-  server: 'cosc304_sqlserver',
+  server: 'cosc304-sqlserver',
   database: 'orders',
   authentication: {
       type: 'default',
@@ -90,7 +90,7 @@ app.use('/ship', ship);
 // Rendering the main page
 app.get('/', function (req, res) {
   res.render('index', {
-    title: "YOUR NAME Grocery Main Page"
+    title: "SNEAKER-HEAD",
   });
 })
 
