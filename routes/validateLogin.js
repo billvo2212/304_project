@@ -1,21 +1,19 @@
 const express = require('express');
 const router = express.Router();
-// const auth = require('../auth');
 const sql = require('mssql');
 
-router.post('/', function(req, res) {
-    // Have to preserve async context since we make an async call
-    // to the database in the validateLogin function.
+router.post('/', function (req, res) {
+    // Preserve async context since we make async calls
     (async () => {
         let authenticatedUser = await validateLogin(req);
         if (authenticatedUser) {
-            req.session.authenticatedUser = req.body.username;
+            req.session.authenticatedUser = req.body.username; // Store username in session
             res.redirect("/");
         } else {
             req.session.loginMessage = "Could not connect to the system using that username/password.";
             res.redirect("/login");
         }
-     })();
+    })();
 });
 
 async function validateLogin(req) {
@@ -25,36 +23,32 @@ async function validateLogin(req) {
 
     let username = req.body.username;
     let password = req.body.password;
-    let authenticatedUser =  await (async function() {
-        try {
-            let pool = await sql.connect(dbConfig);
 
-            const query = `
-                SELECT * 
-                FROM customer
-                WHERE userid = @username AND password = @password
-            `;
-            let result = await pool.request()
-                .input('username', sql.VarChar, username)
-                .input('password', sql.VarChar, password)
-                .query(query);
+    try {
+        let pool = await sql.connect(dbConfig);
 
-                if (result.recordset.length > 0) {
-                    let user = result.recordset[0];
-                    return `${user.userid}`; 
-                }
+        // Query customer table with role check
+        const query = `
+            SELECT userid AS username, role
+            FROM customer
+            WHERE userid = @username AND password = @password
+        `;
 
-                return false;
+        let result = await pool.request()
+            .input('username', sql.VarChar, username)
+            .input('password', sql.VarChar, password)
+            .query(query);
 
-	// TODO: Check if userId and password match some customer account. 
-	// If so, set authenticatedUser to be the username.
-        } catch(err) {
-            console.dir(err);
-            return false;
+        if (result.recordset.length > 0) {
+            return result.recordset[0]; // Return the user and role if found
         }
-    })();
 
-    return authenticatedUser;
+        return false; // No match found
+    } catch (err) {
+        console.error("Error during login validation:", err);
+        return false;
+    }
 }
+
 
 module.exports = router;

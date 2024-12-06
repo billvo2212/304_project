@@ -18,6 +18,7 @@ let displayImage = require('./routes/displayImage');
 let customer = require('./routes/customer');
 let ship = require('./routes/ship');
 let index = require('./routes/index');
+let register = require('./routes/register');
 
 const app = express();
 
@@ -84,7 +85,7 @@ app.use('/product', product);
 app.use('/displayImage', displayImage);
 app.use('/customer', customer);
 app.use('/ship', ship);
-
+app.use('/register' , register);
 
 
 // Rendering the main page
@@ -95,4 +96,4 @@ app.get('/', function (req, res) {
 })
 
 // Starting our Express app
-app.listen(process.env.PORT || 3000);
+app.listen(3000)

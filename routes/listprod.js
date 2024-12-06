@@ -4,12 +4,59 @@ const sql = require('mssql');
 
 router.get('/', async function(req, res, next) {
     res.setHeader('Content-Type', 'text/html');
-    res.write("<title>SNEAKER-HEAD</title>");
+    res.write("<title>Bill & Naman Grocery</title>");
 
     res.write(`
         <style>
             body { font-family: Arial, sans-serif; text-align: center; }
-            .container { display: flex; flex-wrap: wrap; justify-content: center; }
+            header {
+                background-color: #4CAF50; 
+                color: white; 
+                padding: 15px 20px; 
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            header h1 {
+                margin: 0; 
+                font-size: 28px;
+            }
+            .user-info {
+                font-size: 14px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .user-info a {
+                color: white; 
+                text-decoration: none; 
+                font-weight: bold;
+            }
+            nav {
+                background-color: #333; 
+                padding: 10px 0; 
+                text-align: center;
+            }
+            nav a {
+                color: white; 
+                text-decoration: none; 
+                margin: 0 15px; 
+                font-size: 16px;
+                padding: 5px 10px;
+            }
+            nav a:hover {
+                background-color: #4CAF50; 
+                border-radius: 5px;
+            }
+            .container {
+                padding: 20px;
+                max-width: 1200px;
+                margin: 0 auto;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
             .card { 
                 border: 1px solid #ddd; 
                 border-radius: 5px; 
@@ -20,6 +67,7 @@ router.get('/', async function(req, res, next) {
                 font-family: Arial, sans-serif; 
                 text-decoration: none; 
                 color: inherit; 
+                overflow: hidden;
             }
             .card:hover { box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); }
             .card img { 
@@ -47,7 +95,7 @@ router.get('/', async function(req, res, next) {
             }
             .btn:hover { background-color: #45a049; }
             form { margin-bottom: 20px; }
-            input[type="text"] {
+            input[type="text"], select {
                 padding: 10px;
                 font-size: 16px;
                 border: 1px solid #ddd;
@@ -73,17 +121,58 @@ router.get('/', async function(req, res, next) {
                 background-color: #45a049;
             }
         </style>
-        <form method="GET" action="/listprod">
-            <label for="productName"> <h1>Search for a product: </h1></label>
-            <input placeholder="Product name" type="text" id="productName" name="productName">
-            <input type="submit" value="Search">
-            <input type="reset" value="Reset">
-        </form>
+        <header>
+            <h1>Bill & Naman Grocery</h1>
+            <div class="user-info">
+    `);
+
+    const user = req.session?.authenticatedUser || null;
+    if (user) {
+        res.write(`<span>Welcome, ${user}!</span> <a href="/logout">Logout</a>`);
+    } else {
+        res.write(`<a href="/login">Login</a>`);
+    }
+
+    res.write(`
+            </div>
+        </header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/showcart">Cart</a>
+            <a href="/listorder">Orders</a>
+        </nav>
+        <div class="container">
+            <form method="GET" action="/listprod">
+                <label for="productName">Product Name:</label>
+                <input type="text" id="productName" name="productName" placeholder="Enter product name...">
+                
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="">All Categories</option>
+    `);
+
+    try {
+        let pool = await sql.connect(dbConfig);
+        let categories = await pool.request().query(`SELECT * FROM category`);
+        categories.recordset.forEach(category => {
+            res.write(`<option value="${category.categoryId}">${category.categoryName}</option>`);
+        });
+    } catch (err) {
+        res.write('<p>Error loading categories: ' + err.message + '</p>');
+    }
+
+    res.write(`
+                </select>
+                <input type="submit" value="Search">
+                <input type="reset" value="Reset">
+            </form>
+        </div>
         <div class="container">
     `);
 
-    // Get the product name to search for
+    // Get the product name and category to search for
     let name = req.query.productName;
+    let category = req.query.category;
 
     try {
         // Connect to the database
@@ -91,14 +180,21 @@ router.get('/', async function(req, res, next) {
         let results;
 
         // Query the database
-        if (!name) {
+        if (!name && !category) {
             let allProd = `SELECT * FROM product`;
             results = await pool.request().query(allProd);
         } else {
-            let productName_sql = `SELECT * FROM product WHERE productName LIKE @prodname`;
+            let query = `SELECT * FROM product WHERE 1=1`;
+            if (name) {
+                query += ` AND productName LIKE @prodname`;
+            }
+            if (category) {
+                query += ` AND categoryId = @categoryId`;
+            }
             results = await pool.request()
                 .input('prodname', sql.NVarChar, `%${name}%`)
-                .query(productName_sql);
+                .input('categoryId', sql.Int, category)
+                .query(query);
         }
 
         // Print out the result
@@ -108,7 +204,7 @@ router.get('/', async function(req, res, next) {
             // Formatting currency
             let prodPrice = parseFloat(result.productPrice).toFixed(2);
 
-            res.write('<div class="card">');
+            res.write(`<div class="card">`);
 
             // Check if the product has an image
             if (result.productImageURL || result.productImage) {
@@ -116,9 +212,10 @@ router.get('/', async function(req, res, next) {
             }
 
             res.write('<div class="card-container">');
-            res.write(`<h4><a href="/product/${result.productId}">${result.productName}</a></h4>`);
+            res.write(`<h4>${result.productName}</h4>`);
             res.write(`<p>$${prodPrice}</p>`);
             res.write(`<p><a href="addcart?id=${result.productId}&name=${result.productName}&price=${prodPrice}" class="btn">Add to Cart</a></p>`);
+            res.write(`<a href="/product/${result.productId}" class="btn">View Details</a>`);
             res.write('</div></div>');
         }
 
@@ -132,4 +229,3 @@ router.get('/', async function(req, res, next) {
 });
 
 module.exports = router;
-
