@@ -30,7 +30,7 @@ dbConfig = {
       type: 'default',
       options: {
           userName: "sa", 
-          password: "Test123456789"
+          password: "304#sa#pw"
       }
   },   
   options: {      
