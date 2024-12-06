@@ -4,7 +4,7 @@ const sql = require('mssql');
 
 router.get('/', async function(req, res, next) {
     res.setHeader('Content-Type', 'text/html');
-    res.write("<title>Bill & Naman Grocery</title>");
+    res.write("<title>SNEAKER-HEAD</title>");
 
     res.write(`
         <style>
@@ -122,7 +122,7 @@ router.get('/', async function(req, res, next) {
             }
         </style>
         <header>
-            <h1>Bill & Naman Grocery</h1>
+            <h1>SNEAKER-HEAD</h1>
             <div class="user-info">
     `);
 

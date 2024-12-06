@@ -5,7 +5,7 @@ const moment = require('moment');
 
 router.get('/', async function(req, res, next) {
     res.setHeader('Content-Type', 'text/html');
-    res.write("<title>Grocery Order Processing</title>");
+    res.write("<title>SNEAKER Order Processing</title>");
 
     res.write(`
         <style>

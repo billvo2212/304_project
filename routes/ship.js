@@ -69,7 +69,7 @@ router.get('/', async function (req, res, next) {
         let insufficientInventory = null;
         let html = `
             <div style="font-family: Arial, sans-serif; margin: 0 auto; width: 80%;">
-                <h1 style="text-align: center; color: purple;">Grocery Shipment</h1>
+                <h1 style="text-align: center; color: purple;">SNEAKER Shipment</h1>
                 <table style="border-collapse: collapse; width: 100%; margin: 20px auto; text-align: left;">
                     <thead>
                         <tr style="background-color: #f2f2f2;">
