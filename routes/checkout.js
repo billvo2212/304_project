@@ -5,7 +5,7 @@ router.get('/', function (req, res, next) {
     const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
             <title>Grocery CheckOut Line</title>
-            <h1 style="text-align: center; color: #4CAF50;">Grocery Checkout</h1>
+            <h1 style="text-align: center; color: #4CAF50;">SNEAKER-OUT</h1>
             <p style="text-align: center; font-size: 16px;">Enter your Customer ID and Password to complete the transaction:</p>
             
             <form method="get" action="order" style="margin-top: 20px;">
