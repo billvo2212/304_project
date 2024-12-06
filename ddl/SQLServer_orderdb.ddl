@@ -6,6 +6,7 @@ go
 
 -- CREATE DATABASE orders;
 
+-- Drop all tables to reset the database
 DROP TABLE review;
 DROP TABLE shipment;
 DROP TABLE productinventory;
@@ -18,7 +19,7 @@ DROP TABLE ordersummary;
 DROP TABLE paymentmethod;
 DROP TABLE customer;
 
-
+-- Create the customer table with a role column
 CREATE TABLE customer (
     customerId          INT IDENTITY,
     firstName           VARCHAR(40),
@@ -32,9 +33,11 @@ CREATE TABLE customer (
     country             VARCHAR(40),
     userid              VARCHAR(20),
     password            VARCHAR(30),
+    role                VARCHAR(20) DEFAULT 'customer', -- New column for user roles
     PRIMARY KEY (customerId)
 );
 
+-- Create the payment method table
 CREATE TABLE paymentmethod (
     paymentMethodId     INT IDENTITY,
     paymentType         VARCHAR(20),
@@ -42,10 +45,11 @@ CREATE TABLE paymentmethod (
     paymentExpiryDate   DATE,
     customerId          INT,
     PRIMARY KEY (paymentMethodId),
-    FOREIGN KEY (customerId) REFERENCES customer(customerid)
+    FOREIGN KEY (customerId) REFERENCES customer(customerId)
         ON UPDATE CASCADE ON DELETE CASCADE 
 );
 
+-- Create the ordersummary table
 CREATE TABLE ordersummary (
     orderId             INT IDENTITY,
     orderDate           DATETIME,
@@ -57,16 +61,18 @@ CREATE TABLE ordersummary (
     shiptoCountry       VARCHAR(40),
     customerId          INT,
     PRIMARY KEY (orderId),
-    FOREIGN KEY (customerId) REFERENCES customer(customerid)
+    FOREIGN KEY (customerId) REFERENCES customer(customerId)
         ON UPDATE CASCADE ON DELETE CASCADE 
 );
 
+-- Create the category table
 CREATE TABLE category (
     categoryId          INT IDENTITY,
     categoryName        VARCHAR(50),    
     PRIMARY KEY (categoryId)
 );
 
+-- Create the product table
 CREATE TABLE product (
     productId           INT IDENTITY,
     productName         VARCHAR(40),
@@ -79,6 +85,7 @@ CREATE TABLE product (
     FOREIGN KEY (categoryId) REFERENCES category(categoryId)
 );
 
+-- Create the orderproduct table
 CREATE TABLE orderproduct (
     orderId             INT,
     productId           INT,
@@ -91,6 +98,7 @@ CREATE TABLE orderproduct (
         ON UPDATE CASCADE ON DELETE NO ACTION
 );
 
+-- Create the incart table
 CREATE TABLE incart (
     orderId             INT,
     productId           INT,
@@ -103,12 +111,14 @@ CREATE TABLE incart (
         ON UPDATE CASCADE ON DELETE NO ACTION
 );
 
+-- Create the warehouse table
 CREATE TABLE warehouse (
     warehouseId         INT IDENTITY,
     warehouseName       VARCHAR(30),    
     PRIMARY KEY (warehouseId)
 );
 
+-- Create the shipment table
 CREATE TABLE shipment (
     shipmentId          INT IDENTITY,
     shipmentDate        DATETIME,   
@@ -119,6 +129,7 @@ CREATE TABLE shipment (
         ON UPDATE CASCADE ON DELETE NO ACTION
 );
 
+-- Create the productinventory table
 CREATE TABLE productinventory ( 
     productId           INT,
     warehouseId         INT,
@@ -131,6 +142,7 @@ CREATE TABLE productinventory (
         ON UPDATE CASCADE ON DELETE NO ACTION
 );
 
+-- Create the review table
 CREATE TABLE review (
     reviewId            INT IDENTITY,
     reviewRating        INT,
@@ -200,11 +212,19 @@ INSERT INTO productInventory(productId, warehouseId, quantity, price) VALUES (8,
 INSERT INTO productInventory(productId, warehouseId, quantity, price) VALUES (9, 1, 2, 97);
 INSERT INTO productInventory(productId, warehouseId, quantity, price) VALUES (10, 1, 3, 31);
 
-INSERT INTO customer (firstName, lastName, email, phonenum, address, city, state, postalCode, country, userid, password) VALUES ('Arnold', 'Anderson', 'a.anderson@gmail.com', '204-111-2222', '103 AnyWhere Street', 'Winnipeg', 'MB', 'R3X 45T', 'Canada', 'arnold' , 'test');
-INSERT INTO customer (firstName, lastName, email, phonenum, address, city, state, postalCode, country, userid, password) VALUES ('Bobby', 'Brown', 'bobby.brown@hotmail.ca', '572-342-8911', '222 Bush Avenue', 'Boston', 'MA', '22222', 'United States', 'bobby' , 'bobby');
-INSERT INTO customer (firstName, lastName, email, phonenum, address, city, state, postalCode, country, userid, password) VALUES ('Candace', 'Cole', 'cole@charity.org', '333-444-5555', '333 Central Crescent', 'Chicago', 'IL', '33333', 'United States', 'candace' , 'password');
-INSERT INTO customer (firstName, lastName, email, phonenum, address, city, state, postalCode, country, userid, password) VALUES ('Darren', 'Doe', 'oe@doe.com', '250-807-2222', '444 Dover Lane', 'Kelowna', 'BC', 'V1V 2X9', 'Canada', 'darren' , 'pw');
-INSERT INTO customer (firstName, lastName, email, phonenum, address, city, state, postalCode, country, userid, password) VALUES ('Elizabeth', 'Elliott', 'engel@uiowa.edu', '555-666-7777', '555 Everwood Street', 'Iowa City', 'IA', '52241', 'United States', 'beth' , 'test');
+-- Insert customers with roles
+INSERT INTO customer (firstName, lastName, email, phonenum, address, city, state, postalCode, country, userid, password, role)
+VALUES 
+('Arnold', 'Anderson', 'a.anderson@gmail.com', '204-111-2222', '103 AnyWhere Street', 'Winnipeg', 'MB', 'R3X 45T', 'Canada', 'arnold', 'test', 'customer'),
+('Bobby', 'Brown', 'bobby.brown@hotmail.ca', '572-342-8911', '222 Bush Avenue', 'Boston', 'MA', '22222', 'United States', 'bobby', 'bobby', 'customer'),
+('Candace', 'Cole', 'cole@charity.org', '333-444-5555', '333 Central Crescent', 'Chicago', 'IL', '33333', 'United States', 'candace', 'password', 'customer'),
+('Darren', 'Doe', 'oe@doe.com', '250-807-2222', '444 Dover Lane', 'Kelowna', 'BC', 'V1V 2X9', 'Canada', 'darren', 'pw', 'admin'),
+('Elizabeth', 'Elliott', 'engel@uiowa.edu', '555-666-7777', '555 Everwood Street', 'Iowa City', 'IA', '52241', 'United States', 'beth', 'test', 'admin');
+
+
+
+
+
 
 -- Order 1 can be shipped as have enough inventory
 DECLARE @orderId int
@@ -276,3 +296,5 @@ UPDATE Product SET productImageURL = 'img/26.jpg' WHERE ProductId = 26;
 UPDATE Product SET productImageURL = 'img/27.jpg' WHERE ProductId = 27;
 UPDATE Product SET productImageURL = 'img/28.jpg' WHERE ProductId = 28;
 UPDATE Product SET productImageURL = 'img/29.jpg' WHERE ProductId = 29;
+
+

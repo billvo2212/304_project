@@ -18,6 +18,7 @@ let displayImage = require('./routes/displayImage');
 let customer = require('./routes/customer');
 let ship = require('./routes/ship');
 let index = require('./routes/index');
+let register = require('./routes/register');
 
 const app = express();
 
@@ -28,22 +29,16 @@ dbConfig = {
   authentication: {
       type: 'default',
       options: {
-          userName: 'sa', 
-          password: '304#sa#pw'
+          userName: "sa", 
+          password: "Test123456789"
       }
   },   
   options: {      
     encrypt: false,      
     enableArithAbort:false,
-    trustServerCertificate: true,
-    database: 'orders'
+    trustServerCertificate: true, 
   }
 }
-
-if (process.env.MSSQL_URL) {
-  dbConfig = process.env.MSSQL_URL;
-}
-
 app.use(express.static('public'));
 
 // Setting up the session.
@@ -84,15 +79,15 @@ app.use('/product', product);
 app.use('/displayImage', displayImage);
 app.use('/customer', customer);
 app.use('/ship', ship);
-
+app.use('/register' , register);
 
 
 // Rendering the main page
 app.get('/', function (req, res) {
   res.render('index', {
-    title: "SNEAKER-HEAD",
+    title: "YOUR NAME Grocery Main Page"
   });
 })
 
 // Starting our Express app
-app.listen(process.env.PORT || 3000);
+app.listen(3000)

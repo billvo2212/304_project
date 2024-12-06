@@ -7,7 +7,7 @@ services:
         image: cosc304-node       
         container_name: cosc304-node
         volumes:
-            # - ./:/app/  # uncomment this line if you want to mount the current directory to /app
+            - ./:/app/
             - /app/node_modules
         networks:
             network304:
@@ -25,7 +25,7 @@ services:
             MYSQL_PASSWORD: '304testpw'            
             MYSQL_ROOT_PASSWORD: '304rootpw'
         ports:
-            - '3307:3306'
+            - '3306:3306'
         expose:
             - '3306'   
         volumes:
@@ -41,7 +41,7 @@ services:
         restart: always
         environment:
             ACCEPT_EULA: 'Y'
-            SA_PASSWORD: '304#sa#pw'
+            SA_PASSWORD: 'Test123456789'
         ports:
             - '1433:1433'
         expose:
