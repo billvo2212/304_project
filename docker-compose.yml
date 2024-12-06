@@ -7,7 +7,7 @@ services:
         image: cosc304-node       
         container_name: cosc304-node
         volumes:
-            - ./:/app/
+            - ./:/app/  # uncomment this line if you want to mount the current directory to /app
             - /app/node_modules
         networks:
             network304:
